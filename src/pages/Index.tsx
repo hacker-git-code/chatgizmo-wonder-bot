@@ -23,7 +23,7 @@ const Index = () => {
             <ChatInterface className="h-[70vh] md:h-[65vh]" />
             
             <p className="text-center text-xs text-muted-foreground mt-6">
-              Designed with simplicity and elegance • A harmonious interaction
+              Designed with care • Powered by AI
             </p>
           </div>
         </div>

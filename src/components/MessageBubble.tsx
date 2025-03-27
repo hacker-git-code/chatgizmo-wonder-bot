@@ -25,9 +25,9 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isLastMessage })
     >
       <div 
         className={cn(
-          "max-w-[85%] sm:max-w-[70%] px-4 py-3 rounded-3xl flex flex-col",
+          "max-w-[85%] sm:max-w-[70%] px-4 py-3 rounded-2xl flex flex-col",
           isUser 
-            ? "bg-primary text-primary-foreground rounded-tr-sm" 
+            ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-tr-sm" 
             : "glass-morphism rounded-tl-sm"
         )}
       >
@@ -35,7 +35,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isLastMessage })
         <div 
           className={cn(
             "text-[10px] mt-1 self-end opacity-70",
-            isUser ? "text-primary-foreground" : "text-foreground"
+            isUser ? "text-white/80" : "text-foreground/70"
           )}
         >
           {formatTime(message.timestamp)}
