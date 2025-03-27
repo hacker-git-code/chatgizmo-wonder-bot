@@ -48,7 +48,7 @@ export const generateResponse = async (userMessage: string): Promise<string> => 
 };
 
 // Custom hook for managing chat messages
-export const useChat = () => {
+export function useChat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
