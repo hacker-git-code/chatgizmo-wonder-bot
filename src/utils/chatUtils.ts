@@ -69,8 +69,13 @@ export const useChat = () => {
   const handleSendMessage = async (message: string) => {
     if (!message.trim()) return;
     
-    // Add user message
-    addMessage(message, 'user');
+    // Add user message if it's from the user (not the initial bot message)
+    if (messages.length > 0 || message !== "Hi there! I'm your AI assistant. How can I help you today?") {
+      addMessage(message, message === "Hi there! I'm your AI assistant. How can I help you today?" ? 'bot' : 'user');
+    } else {
+      addMessage(message, 'bot');
+      return;
+    }
     
     // Show typing indicator
     setIsTyping(true);
@@ -87,6 +92,15 @@ export const useChat = () => {
     }
   };
 
+  // Clear all chat messages
+  const clearChat = () => {
+    setMessages([]);
+    // Add the welcome message again
+    setTimeout(() => {
+      handleSendMessage("Hi there! I'm your AI assistant. How can I help you today?");
+    }, 100);
+  };
+
   // Scroll to bottom when messages change
   useEffect(() => {
     const scrollToBottom = () => {
@@ -100,6 +114,7 @@ export const useChat = () => {
     isTyping,
     handleSendMessage,
     messagesEndRef,
+    clearChat,
   };
 };
 
