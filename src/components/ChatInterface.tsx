@@ -1,12 +1,13 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Mic, Loader2, Settings, RefreshCw, Copy, ImagePlus, Download, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
+import { Send, Mic, Loader2, Settings, RefreshCw, Copy, ImagePlus, Download, PanelLeftClose, PanelLeftOpen, Sparkles } from 'lucide-react';
 import { useChat } from '@/utils/chatUtils';
 import MessageBubble from './MessageBubble';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { useToast } from '@/hooks/use-toast';
 
 interface ChatInterfaceProps {
   className?: string;
@@ -16,12 +17,15 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ className }) => {
   const [inputValue, setInputValue] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const [isCompactMode, setIsCompactMode] = useState(false);
+  const { toast } = useToast();
+  
   const { 
     messages, 
     isTyping, 
     handleSendMessage, 
     messagesEndRef, 
-    clearChat 
+    clearChat,
+    copyConversation 
   } = useChat();
   
   const inputRef = useRef<HTMLInputElement>(null);
@@ -41,14 +45,35 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ className }) => {
     }
   };
 
-  const copyConversation = () => {
+  // Function to download conversation as text file
+  const downloadConversation = () => {
     const text = messages.map(m => `${m.sender === 'user' ? 'You' : 'AI'}: ${m.content}`).join('\n\n');
-    navigator.clipboard.writeText(text);
-    // Toast notification would be added here in a real implementation
+    const blob = new Blob([text], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `conversation-${new Date().toISOString().slice(0, 10)}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    toast({
+      title: "Conversation downloaded",
+      description: "Your chat has been saved as a text file",
+      duration: 2000,
+    });
   };
 
   return (
-    <div className={cn("w-full flex flex-col", className)}>
+    <div className={cn("w-full flex flex-col relative", className)}>
+      {/* Floating AI icon */}
+      <div className="absolute -top-12 left-1/2 transform -translate-x-1/2">
+        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-xl">
+          <Sparkles className="h-8 w-8 text-white" />
+        </div>
+      </div>
+      
       {/* Chat Header with Controls */}
       <div className="flex items-center justify-between mb-3 px-3">
         <Button 
@@ -93,6 +118,24 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ className }) => {
               </TooltipTrigger>
               <TooltipContent>
                 <p>Copy conversation</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+          
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button 
+                  variant="ghost" 
+                  size="icon"
+                  onClick={downloadConversation}
+                  className="text-muted-foreground hover:text-primary hover:bg-primary/10"
+                >
+                  <Download className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Download conversation</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>

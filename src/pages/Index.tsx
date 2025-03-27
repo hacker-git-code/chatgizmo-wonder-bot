@@ -24,8 +24,8 @@ const Index = () => {
   if (!mounted) return null;
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-background p-2 sm:p-4">
-      <div className="w-full max-w-4xl mx-auto animate-fade-in h-[calc(100vh-2rem)] flex flex-col">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-background p-2 sm:p-4 bg-dot-pattern">
+      <div className="w-full max-w-4xl mx-auto animate-fade-in h-[calc(100vh-2rem)] flex flex-col overflow-hidden">
         {!isCompactMode && <WelcomeHeader />}
         
         {isCompactMode && (
@@ -51,14 +51,16 @@ const Index = () => {
           )}>
             <ChatInterface className={cn(
               "flex-1 flex flex-col",
-              isCompactMode ? "max-h-[88vh]" : "max-h-[75vh]"
+              isCompactMode ? "max-h-[88vh]" : "max-h-[80vh]"
             )} />
             
             <p className={cn(
               "text-center text-xs text-muted-foreground", 
               isCompactMode ? "mt-2 mb-1" : "mt-4"
             )}>
-              Designed with care • Powered by AI
+              <span className="px-3 py-1 rounded-full glass-morphism">
+                Designed with care • Powered by AI
+              </span>
             </p>
           </div>
         </div>

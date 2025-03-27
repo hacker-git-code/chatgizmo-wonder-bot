@@ -1,5 +1,6 @@
 
 import { useState, useEffect, useRef } from 'react';
+import { toast } from "@/hooks/use-toast";
 
 // Define message types
 export interface Message {
@@ -95,10 +96,27 @@ export function useChat() {
   // Clear all chat messages
   const clearChat = () => {
     setMessages([]);
+    // Show toast notification
+    toast({
+      title: "Chat cleared",
+      description: "Your conversation has been reset",
+      duration: 2000,
+    });
     // Add the welcome message again
     setTimeout(() => {
       handleSendMessage("Hi there! I'm your AI assistant. How can I help you today?");
     }, 100);
+  };
+
+  // Copy conversation to clipboard
+  const copyConversation = () => {
+    const text = messages.map(m => `${m.sender === 'user' ? 'You' : 'AI'}: ${m.content}`).join('\n\n');
+    navigator.clipboard.writeText(text);
+    toast({
+      title: "Copied to clipboard",
+      description: "Conversation has been copied",
+      duration: 2000,
+    });
   };
 
   // Scroll to bottom when messages change
@@ -115,6 +133,7 @@ export function useChat() {
     handleSendMessage,
     messagesEndRef,
     clearChat,
+    copyConversation,
   };
 };
 
